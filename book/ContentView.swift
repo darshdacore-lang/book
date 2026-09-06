@@ -1,61 +1,39 @@
-//
-//  ContentView.swift
-//  book
-//
-//  Created by Darsh Agarwal on 4/9/26.
-//
-
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @State private var books: [Book] = [
+        Book(title: "The Hobbit", author: "J.R.R. Tolkien", totalPages: 310, pagesRead: 150),
+        Book(title: "1984", author: "George Orwell", totalPages: 328, pagesRead: 328),
+        Book(title: "Dune", author: "Frank Herbert", totalPages: 412, pagesRead: 45)
+    ]
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        NavigationStack {
+            List($books) { $book in
+                NavigationLink {
+                    BookDetailView(book: $book)
+                } label: {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(book.title)
+                                .font(.headline)
+                            Text(book.author)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        if book.isCompleted {
+                            Image(systemName: "checkmark.seal.fill")
+                                .foregroundColor(.green)
+                        } else {
+                            Text("\(book.pagesRead)/\(book.totalPages) pgs")
+                                .font(.caption)
+                                .foregroundColor(.blue)
+                        }
                     }
                 }
-                .onDelete(perform: deleteItems)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
+            .navigationTitle("My Library 📚")
         }
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
-    }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
