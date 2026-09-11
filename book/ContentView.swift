@@ -11,7 +11,7 @@ struct ContentView: View {
         NavigationStack {
             List($books) { $book in
                 NavigationLink {
-                    BookDetailView(book: $book)
+                    BookDetailView(book: book)
                 } label: {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
