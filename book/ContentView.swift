@@ -7,6 +7,8 @@ struct ContentView: View {
         Book(title: "Dune", author: "Frank Herbert", totalPages: 412, pagesRead: 45)
     ]
 
+    @State private var showAddBook = false
+
     var body: some View {
         NavigationStack {
             List($books) { $book in
@@ -17,11 +19,14 @@ struct ContentView: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(book.title)
                                 .font(.headline)
+
                             Text(book.author)
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
+
                         Spacer()
+
                         if book.isCompleted {
                             Image(systemName: "checkmark.seal.fill")
                                 .foregroundColor(.green)
@@ -34,6 +39,20 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("My Library 📚")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showAddBook = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $showAddBook) {
+                AddBookView { newBook in
+                    books.append(newBook)
+                }
+            }
         }
     }
 }

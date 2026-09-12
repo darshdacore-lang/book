@@ -5,8 +5,8 @@ import SwiftData
 struct ReadingAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            InformationBookView()
         }
-        .modelContainer(for: Book.self)
+        .modelContainer(for: [Book.self, Page.self])
     }
 }
