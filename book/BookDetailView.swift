@@ -4,7 +4,7 @@ import SwiftData
 struct BookDetailView: View {
     // @Bindable allows automatic, real-time SwiftData synchronization when properties change
     @Bindable var book: Book
-
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
@@ -23,13 +23,13 @@ struct BookDetailView: View {
                         .font(.title)
                         .bold()
                         .multilineTextAlignment(.center)
-
+                    
                     Text("by \(book.author)")
                         .font(.title3)
                         .foregroundColor(.secondary)
                 }
                 .padding(.top)
-
+                
                 // Progress Bar & Percentage
                 VStack(spacing: 8) {
                     ProgressView(value: Double(book.pagesRead), total: Double(max(book.totalPages, 1))) {
@@ -43,7 +43,7 @@ struct BookDetailView: View {
                         }
                     }
                     .tint(book.isCompleted ? .green : .accentColor)
-
+                    
                     if book.isCompleted {
                         Label("Completed!", systemImage: "checkmark.circle.fill")
                             .font(.subheadline)
@@ -54,12 +54,12 @@ struct BookDetailView: View {
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(12)
-
+                
                 // Page Control Section
                 VStack(spacing: 16) {
                     Text("Current Page: \(book.pagesRead) of \(book.totalPages)")
                         .font(.headline)
-
+                    
                     // Slider Control
                     Slider(
                         value: Binding(
@@ -69,7 +69,7 @@ struct BookDetailView: View {
                         in: 0...Double(max(book.totalPages, 1)),
                         step: 1
                     )
-
+                    
                     // Quick Stepper Buttons (-10 / +10 pages)
                     HStack(spacing: 20) {
                         Button(action: {
@@ -78,9 +78,9 @@ struct BookDetailView: View {
                             Label("10 pgs", systemImage: "minus.circle")
                         }
                         .disabled(book.pagesRead == 0)
-
+                        
                         Spacer()
-
+                        
                         Button(action: {
                             book.pagesRead = min(book.totalPages, book.pagesRead + 10)
                         }) {
@@ -93,7 +93,7 @@ struct BookDetailView: View {
                 .padding()
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(12)
-
+                
                 Spacer()
             }
             .padding()
@@ -101,11 +101,12 @@ struct BookDetailView: View {
         .navigationTitle("Reading Details")
         .navigationBarTitleDisplayMode(.inline)
     }
-
+    
     // Helper to calculate progress percentage
     private var progressPercentage: Int {
         guard book.totalPages > 0 else { return 0 }
         let percentage = (Double(book.pagesRead) / Double(book.totalPages)) * 100
         return Int(percentage)
     }
+    
 }

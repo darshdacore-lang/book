@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Book {
+final class Notebook {
     var name: String
     @Relationship(deleteRule: .cascade) var pages: [Page] = []
     var createdAt: Date
@@ -18,12 +18,12 @@ final class Page {
     var title: String
     var content: String
     var createdAt: Date
-    var book: Book?
+    var notebook: Notebook?
 
-    init(title: String, content: String, createdAt: Date = .now, book: Book? = nil) {
+    init(title: String, content: String, createdAt: Date = .now, notebook: Notebook? = nil) {
         self.title = title
         self.content = content
         self.createdAt = createdAt
-        self.book = book
+        self.notebook = notebook
     }
 }

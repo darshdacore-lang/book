@@ -6,7 +6,7 @@ import SwiftData
 
 struct InformationBookView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Page.createdAt, order: .forward) private var pages: [Page]
+    @Query(sort: [SortDescriptor(\Page.createdAt)]) private var pages: [Page]
 
     @State private var selection: Page?
     @State private var isSaving: Bool = false
@@ -184,6 +184,15 @@ private struct SaveSheet: View {
 }
 
 #Preview {
-    InformationBookView()
-        .modelContainer(for: [Book.self, Page.self], inMemory: true)
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(
+            for: Notebook.self, Page.self,
+            configurations: config
+        )
+        return InformationBookView()
+            .modelContainer(container)
+    } catch {
+        return Text("Preview failed to load model container: \(error.localizedDescription)")
+    }
 }
